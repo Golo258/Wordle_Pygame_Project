@@ -5,6 +5,8 @@ HEIGHT = 700
 FPS = 60
 FONT_PATH = "freesansbold.ttf"
 EMPTY = " "
+pygame.init()
+HUGE_FONT = pygame.font.Font('freesansbold.ttf', 56)
 
 EMPTY_BOARD = [[" ", " ", " ", " ", " "],
          [" ", " ", " ", " ", " "],
