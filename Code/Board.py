@@ -15,11 +15,20 @@ class Board:
         for letter in self.letters:
             letter.draw(screen)
         pygame.draw.rect(screen, GREEN, [5, self.player_turn * 100 + 5, WIDTH - 10, 90], 3, 5)
-    #     dwrawing the green rect
+
+    def add_letter(self, letter, col, row):
+        target_letter = None
+        for board_letter in self.letters:
+            if board_letter.col == col and board_letter.row == row:
+                target_letter = board_letter
+                break
+
+        if target_letter is not None:
+            target_letter.set_letter(letter)
 
     def check_words(self, screen):
         for letter in self.letters:
-            if self.secret_word[letter.row_positon] == letter.value and self.player_turn > letter.letter_number:
+            if self.secret_word[letter.row_position] == letter.value and self.player_turn > letter.letter_number:
                 pygame.draw.rect(screen, GREEN, letter.rect, 0, 5)
             elif letter.value in self.secret_word and self.player_turn > letter.letter_number:
                 pygame.draw.rect(screen, YELLOW, letter.rect, 0, 5)
