@@ -1,51 +1,53 @@
 
-from Board import Board
 import pygame
 import random
 import sys
 from Wordle_Game.Wordle_Pygame_Project.Resources.words_eng import  *
-from Wordle_Game.Wordle_Pygame_Project.Resources.Settings import  *
+from Wordle_Game.Wordle_Pygame_Project.Resources.Setup import  *
+from Keyboard import Keyboard
+from Warnings import Warnings
 
 class Game:
-    def __init__(self, screen, secret_word):
-        self.turn = 0
-        self.game_over = False
-        self.letters = 0
-        self.turn_active = True
-        self.screen = screen
-        self.secret_word = secret_word
-        self.board = Board()
+    def __init__(self):
+        # pygame.display.set_icon(Setup.ICON) # TODO add new icon from resources
+        self.screen = pygame.display.set_mode((Setup.WIDTH, Setup.HEIGHT))
+        pygame.display.set_caption("Wordle Grzesiuniunia Game!")
+        self.keyboard = Keyboard()
+        self.warning = Warnings(self.screen)
+        self.game_result = self.keyboard.game_result
+        self.background_rect=  Setup.BACKGROUND.get_rect(center=(317, 300))
 
     def run(self):
-        def update(self):
+        self.screen.fill("white")
+        self.screen.blit(Setup.BACKGROUND, self.background_rect)
+        pygame.display.update()
+        self.keyboard.draw_keyboard(self.screen)
+        while True:
+            if self.game_result != "":
+                self.warning.play_again()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                elif self.flag_win or self.flag_lose:
-                    if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
-                        self.reset_game()
-                else:
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_BACKSPACE:
-                            if self.curr_word:
-                                self.curr_word = self.curr_word[:-1]
-                                self.curr_letter -= 1
-                        elif event.key == pygame.K_RETURN:
-                            if len(self.curr_word) == LETTER_LENGTH:
-                                if self.curr_word.lower() in self.wordlist:
-                                    self.word_count += 1
-                                    self.used_words.append(self.curr_word)
-                                    self.curr_word = ""
-                                    self.curr_letter = 0
-                                else:
-                                    self.flag_invalid_word = True
-                                    self.timer_flag_1 = 0
-                            else:
-                                self.flag_not_enough_letters = True
-                                self.timer_flag_2 = 0
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        if self.game_result != "":
+                            self.keyboard.reset_game(self.screen, self.background_rect)
                         else:
-                            if len(self.curr_word) < LETTER_LENGTH:
-                                if event.unicode.isalpha():
-                                    self.curr_word += event.unicode.upper()
-                                    self.curr_letter += 1
+                            if len(self.keyboard.current_guess_string) == 5 and self.keyboard.current_guess_string.lower() in words:
+                                self.keyboard.check_guess_correctness()
+                    elif event.key == pygame.K_BACKSPACE:
+                        if len(self.keyboard.current_guess_string) > 0:
+                            self.keyboard.delete_letter(self.screen)
+                    else:
+                        key_pressed = event.unicode.upper()
+                        if key_pressed in "QWERTYUIOPASDFGHJKLZXCVBNM" and key_pressed != "":
+                            if len(self.keyboard.current_guess_string) < 5:
+                                self.keyboard.create_new_letter(key_pressed, self.screen)
+
+
+if __name__ == '__main__':
+    game = Game()
+    game.run()
+
+    pygame.quit()
