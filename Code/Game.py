@@ -1,53 +1,80 @@
-
 import pygame
 import random
 import sys
-from Wordle_Game.Wordle_Pygame_Project.Resources.words_eng import  *
-from Wordle_Game.Wordle_Pygame_Project.Resources.Setup import  *
+from Wordle_Game.Wordle_Pygame_Project.Resources.words_eng import *
+from Wordle_Game.Wordle_Pygame_Project.Resources.Setup import *
+from Wordle_Game.Wordle_Pygame_Project.Resources.Colors import *
 from Keyboard import Keyboard
 from Warnings import Warnings
 
+
 class Game:
     def __init__(self):
-        # pygame.display.set_icon(Setup.ICON) # TODO add new icon from resources
         self.screen = pygame.display.set_mode((Setup.WIDTH, Setup.HEIGHT))
         pygame.display.set_caption("Wordle Grzesiuniunia Game!")
-        self.keyboard = Keyboard()
+        self.game_result = ""
+        self.keyboard = Keyboard(self.screen, self.game_result)
         self.warning = Warnings(self.screen)
-        self.game_result = self.keyboard.game_result
-        self.background_rect=  Setup.BACKGROUND.get_rect(center=(317, 300))
+        self.is_top_warning = False
 
     def run(self):
-        self.screen.fill("white")
-        self.screen.blit(Setup.BACKGROUND, self.background_rect)
+
+        self.screen.fill(Colors.BACKGROUND.value)
+        self.screen.blit(Setup.BACKGROUND, self.keyboard.background_rect)
         pygame.display.update()
-        self.keyboard.draw_keyboard(self.screen)
+        self.keyboard.draw_keyboard()
+
         while True:
-            if self.game_result != "":
-                self.warning.play_again()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        mouse_pos = pygame.mouse.get_pos()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
-                        if self.game_result != "":
-                            self.keyboard.reset_game(self.screen, self.background_rect)
-                        else:
-                            if len(self.keyboard.current_guess_string) == 5 and self.keyboard.current_guess_string.lower() in words:
-                                self.keyboard.check_guess_correctness()
+                        if len(self.keyboard.current_guess_string) == 5 and self.keyboard.current_guess_string.lower() in words:
+                            self.keyboard.check_guess_correctness()
+                            pygame.draw.rect(self.screen, Colors.BACKGROUND.value, (129, 5, 500, 50))
+                            pygame.display.update()
+                            self.is_top_warning = False
+                        elif len(self.keyboard.current_guess_string) < 5:
+                            if self.is_top_warning:
+                                pygame.draw.rect(self.screen, Colors.BACKGROUND.value, (129, 5, 500, 50))
+                                pygame.display.update()
+                            self.warning.get_warning_top("letter_nr")
+                            self.is_top_warning = True
+
+                        elif self.keyboard.current_guess_string not in words:
+                            if self.is_top_warning:
+                                pygame.draw.rect(self.screen, Colors.BACKGROUND.value, (129, 5, 500, 50))
+                                pygame.display.update()
+                            self.warning.get_warning_top("base_error")
+                            self.is_top_warning = True
+
                     elif event.key == pygame.K_BACKSPACE:
                         if len(self.keyboard.current_guess_string) > 0:
-                            self.keyboard.delete_letter(self.screen)
+                            self.keyboard.delete_letter()
                     else:
                         key_pressed = event.unicode.upper()
-                        if key_pressed in "QWERTYUIOPASDFGHJKLZXCVBNM" and key_pressed != "":
-                            if len(self.keyboard.current_guess_string) < 5:
-                                self.keyboard.create_new_letter(key_pressed, self.screen)
+                        if key_pressed.isalpha() and key_pressed != "":
+                            if len(self.keyboard.current_guess_string) < 5 and self.keyboard.guesses_count < 6:
+                                self.keyboard.create_new_letter(key_pressed)
+                            else:
+                                self.game_result = "Lose"
+
+            pygame.draw.rect(
+                self.screen, Colors.BLACK.value,
+                (0, 0, Setup.WIDTH, Setup.WIDTH + 237), 5
+            )
+            pygame.display.update()
+
+    def reset_game(self):
+        self.keyboard.reset_game()
 
 
 if __name__ == '__main__':
     game = Game()
     game.run()
-
     pygame.quit()

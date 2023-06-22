@@ -23,3 +23,4 @@ class Colors(Enum):
     INCORRECT_CHOOSE = (50, 50, 50)
     MISPLACED_CHOOSE = (255, 193, 53)
     CORRECT_CHOOSE = (0, 185, 6)
+    BACKGROUND = (51, 51, 51)
