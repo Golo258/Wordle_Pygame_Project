@@ -8,12 +8,12 @@ from Letter import Letter
 from Warnings import Warnings
 class Keyboard:
     def __init__(self, screen, game_result):
-        self.guesses = [[]] * 6  # todo change name to guesses_list
+        self.guesses = [[]] * 6
         self.guesses_count = 0
         self.current_guess = []
         self.current_guess_string = ""
         self.current_letter_bg_x = 110
-        self.keys = []  # todo change name to letter_key
+        self.keys = []
         self.key_x = 20 + 55
         self.key_y = 600 + 80
         self.game_result = game_result

@@ -31,6 +31,8 @@ class Warnings:
             text, rect = self.word_has_to_have_5_letter_warning()
         elif end_behaviour == "base_error":
             text, rect = self.word_not_in_base_warning()
+        else:
+            text, rect = self.start_game()
         self.screen.blit(text, rect)
         pygame.display.update()
 
@@ -58,3 +60,8 @@ class Warnings:
         wrong_letter_number_text = Setup.PLAY_AGAIN_FONT.render("Word has to have 5 letter!", True, "black")
         wrong_letter_number_rect = wrong_letter_number_text.get_rect(center=(Setup.WIDTH / 2, 33))
         return wrong_letter_number_text, wrong_letter_number_rect
+
+    def start_game(self):
+        first_text = Setup.PLAY_AGAIN_FONT.render("Type word to start game", True, "black")
+        first_rect = first_text.get_rect(center=(Setup.WIDTH / 2, 33))
+        return first_text, first_rect

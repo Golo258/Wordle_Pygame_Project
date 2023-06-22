@@ -1,6 +1,10 @@
+import random
+
 import pygame
 import os
 pygame.init()
+from Wordle_Game.Wordle_Pygame_Project.Resources.words_eng import *
+
 class Setup():
     WIDTH = 633 + 110  # 750 - x - 110
     HEIGHT = 900 + 80  # 980  - y -  80
@@ -15,9 +19,9 @@ class Setup():
     LETTER_SIZE = 75
     OUTLINE = "#d3d6da"
     FILLED_OUTLINE = "#878a8c"
-    CORRECT_WORD = "coder"
+    CORRECT_WORD = random.choice(words)
     print(CORRECT_WORD)
-    BACKGROUND_PATH = os.path.join(os.path.dirname(__file__), "Starting Tiles.png")
+    BACKGROUND_PATH = os.path.join(os.path.dirname(__file__), "Background_tile.png")
     BACKGROUND = pygame.image.load(BACKGROUND_PATH)
     PLAY_AGAIN_FONT = pygame.font.SysFont(fonts[47], 40)
 

@@ -11,14 +11,13 @@ from Warnings import Warnings
 class Game:
     def __init__(self):
         self.screen = pygame.display.set_mode((Setup.WIDTH, Setup.HEIGHT))
-        pygame.display.set_caption("Wordle Grzesiuniunia Game!")
+        pygame.display.set_caption("Wordle GG Game!")
         self.game_result = ""
         self.keyboard = Keyboard(self.screen, self.game_result)
         self.warning = Warnings(self.screen)
         self.is_top_warning = False
 
     def run(self):
-
         self.screen.fill(Colors.BACKGROUND.value)
         self.screen.blit(Setup.BACKGROUND, self.keyboard.background_rect)
         pygame.display.update()
@@ -29,9 +28,6 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1:
-                        mouse_pos = pygame.mouse.get_pos()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
                         if len(self.keyboard.current_guess_string) == 5 and self.keyboard.current_guess_string.lower() in words:

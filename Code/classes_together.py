@@ -48,7 +48,7 @@ class Setup():
     FILLED_OUTLINE = "#878a8c"
     CORRECT_WORD = "coder"
     print(CORRECT_WORD)
-    BACKGROUND = pygame.image.load("assets/Starting Tiles.png")
+    BACKGROUND = pygame.image.load("assets/Background_tile.png")
     PLAY_AGAIN_FONT = pygame.font.SysFont(fonts[0], 40)
 
 
